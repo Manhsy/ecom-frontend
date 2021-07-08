@@ -1,9 +1,10 @@
 import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, ActivityIndicator, FlatList} from 'react-native';
+import {View, StyleSheet, ActivityIndicator, FlatList, ScrollView} from 'react-native';
 import {Container, Header, Icon, Item, Input, Text} from 'native-base';
 
 import ProductList from './ProductList';
 import SearchedProduct from './SearchedProducts';
+import Banner from '../../shared/banner'
 
 const data = require('../../../assets/products.json')
 
@@ -47,25 +48,31 @@ const ProductContainer = ()=>{
                         onFocus = {openList}
                         onChangeText = {(text)=>searchProduct(text)}
                     />
+                    {focus == true? (<Icon onPress = {onBlur} name = 'ios-close'/>): null}
                 </Item>
             </Header>
-            {focus ? (
+            {focus == true ? (
                 <SearchedProduct
                     productFiltered= {productFiltered}
                 />
-            ) : (
-                <View>
-                    <View style= {{marginTop: 0 , backgroundColor: 'gainsboro'}}>
-                        <FlatList
-                            numColumns = {2}
-                            data = {products}
-                            renderItem = {({item})=> <ProductList 
-                                key = {item.id} 
-                                item = {item}/>}
-                            keyExtractor = {item => item.name}
-                        />
+            ):(
+                <ScrollView>
+                    <View style= {{marginTop: 0, backgroundColor: '#DCDCDC'}}>
+                        <View><Banner/></View>
+                        <View>
+                            <FlatList
+                                numColumns = {2}
+                                data = {products}
+                                renderItem = {({item})=> 
+                                    <ProductList 
+                                        key = {item.id} 
+                                        item = {item}
+                                    />}
+                                keyExtractor = {item => item.name}
+                            />
                         </View>
-                </View>
+                    </View>
+                </ScrollView>
             )}
         </Container>
         
