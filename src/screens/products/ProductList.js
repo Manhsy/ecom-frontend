@@ -14,7 +14,8 @@ const ProductList = (props)=>{
             }}
         >
             <View style = {{width: width/2}}>
-                <ProductCard {...item}/>
+                <ProductCard 
+                    {...item}/>
             </View>
         </TouchableOpacity>
     )

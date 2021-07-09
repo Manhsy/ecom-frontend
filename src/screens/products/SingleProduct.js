@@ -1,6 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import {View, Image, StyleSheet, ScrollView, Button, Text } from 'react-native'
 import {Left, Right, Container, H1} from 'native-base'
+import {connect} from 'react-redux';
+import * as actions from '../../redux/actions/cartActions'
 
 const SingleProduct = (props)=>{
     const [item, setItem] = useState(props.route.params.item);
@@ -31,11 +33,20 @@ const SingleProduct = (props)=>{
                 <Right>
                     <Button
                         title = "Add"
+                        onPress = {()=>{
+                            props.addItemToCart(item)
+                        }}
                     />
                 </Right>
             </View>
         </Container>
     )
+}
+const mapDispatchToProps = (dispatch)=>{
+    return {
+        addItemToCart: (product) => 
+            dispatch(actions.addToCart({quantity: 1, product}))
+    }
 }
 
 const styles = StyleSheet.create({
@@ -80,4 +91,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default SingleProduct;
+export default connect(null, mapDispatchToProps)(SingleProduct);
