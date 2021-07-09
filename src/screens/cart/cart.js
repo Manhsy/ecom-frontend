@@ -4,7 +4,7 @@ import {
   StyleSheet,
   Dimensions,
   Button,
-  touchableOpacity,
+  TouchableOpacity,
 } from "react-native";
 import {
   Container,
@@ -19,6 +19,8 @@ import {
 import Icon from "react-native-vector-icons/FontAwesome";
 import { connect } from "react-redux";
 import * as actions from "../../redux/actions/cartActions";
+import { SwipeListView } from "react-native-swipe-list-view";
+import CartItem from "./cartItem";
 
 var { height, width } = Dimensions.get("window");
 
@@ -30,33 +32,31 @@ const Cart = (props) => {
   });
 
   return (
-    <Container>
+    <>
       {props.cartItems.length > 0 ? (
         <Container>
           <H1 style={{ alignSelf: "center" }}>Cart</H1>
-          {props.cartItems.map((data) => {
-            return (
-              <ListItem style={styles.listItem} key={Math.random()} avatar>
-                <Left>
-                  <Thumbnail
-                    source={{
-                      uri: data.product.image
-                        ? data.product.image
-                        : "https://i.insider.com/5b1702bd1ae66244008b4c94?width=750&format=jpeg&auto=webp",
-                    }}
-                  />
-                </Left>
-                <Body style={styles.body}>
-                  <Left>
-                    <Text>{data.product.name}</Text>
-                  </Left>
-                  <Right>
-                    <Text>${data.product.price}</Text>
-                  </Right>
-                </Body>
-              </ListItem>
-            );
-          })}
+          <SwipeListView
+            data={props.cartItems}
+            renderItem={(data) => <CartItem item={data} />}
+            renderHiddenItem={(data) => (
+              <View style={styles.hiddenContainer}>
+                <TouchableOpacity
+                  style={styles.hiddenButton}
+                  onPress={() => props.removeFromCart(data.item)}
+                >
+                  <Icon name="trash" color={"white"} size={30} />
+                </TouchableOpacity>
+              </View>
+            )}
+            disableRightSwipe={true}
+            previewOpenDelay={3000}
+            friction={1000}
+            tension={40}
+            leftOpenValue={75}
+            stopLeftSwipe={75}
+            rightOpenValue={-75}
+          />
           <View style={styles.bottomContainer}>
             <Left>
               <Text style={styles.price}>${totalPrice.toFixed(2)}</Text>
@@ -79,12 +79,13 @@ const Cart = (props) => {
           <Text>There are currently no item in cart</Text>
         </Container>
       )}
-    </Container>
+    </>
   );
 };
 const mapDispatchToProps = (dispatch) => {
   return {
     clearCart: () => dispatch(actions.clearCart()),
+    removeFromCart: (item) => dispatch(actions.removeFromCart(item)),
   };
 };
 
@@ -101,16 +102,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  listItem: {
-    alignItems: "center",
-    backgroundColor: "white",
-    justifyContent: "center",
-  },
-  body: {
-    margin: 10,
-    alignItems: "center",
-    flexDirection: "row",
-  },
   bottomContainer: {
     flexDirection: "row",
     position: "absolute",
@@ -124,7 +115,19 @@ const styles = StyleSheet.create({
     margin: 20,
     color: "red",
   },
-  checkout: {},
+  hiddenContainer: {
+    flex: 1,
+    justifyContent: "flex-end",
+    flexDirection: "row",
+  },
+  hiddenButton: {
+    backgroundColor: "red",
+    justifyContent: "center",
+    alignItems: "flex-end",
+    paddingRight: 25,
+    height: 70,
+    width: width / 1.2,
+  },
 });
 
 //connect(state, dispatch)
