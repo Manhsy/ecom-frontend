@@ -20,12 +20,12 @@ const Checkout = (props) => {
   const [country, setCountry] = useState("USA");
   const [phone, setPhone] = useState();
 
-  // useEffect(() => {
-  //   setOrderItems(props.cartItems);
-  //   return () => {
-  //     setOrderItems();
-  //   };
-  // }, []);
+  useEffect(() => {
+    setOrderItems(props.cartItems);
+    return () => {
+      setOrderItems();
+    };
+  }, []);
 
   const checkout = () => {
     let order = {
@@ -59,47 +59,47 @@ const Checkout = (props) => {
           placeholder={"Shipping Address"}
           name={"ShippingAddress"}
           value={address}
-          onChangeText={(text) => setPhone(setAddress)}
+          onChangeText={(text) => setAddress(text)}
         />
         <Input
           placeholder={"Shipping Address2"}
           name={"ShippingAddress2"}
           value={address2}
-          onChangeText={(text) => setPhone(setAddress2)}
+          onChangeText={(text) => setAddress2(text)}
         />
         <Input
           placeholder={"City"}
           name={"City"}
           value={city}
-          onChangeText={(text) => setPhone(setCity)}
+          onChangeText={(text) => setCity(text)}
         />
         <Input
           placeholder={"zip"}
           name={"zip"}
           value={zip}
           keyboardType={"numeric"}
-          onChangeText={(text) => setPhone(setZip)}
+          onChangeText={(text) => setZip(text)}
         />
+        <Item picker>
+          <Picker
+            note
+            mode="dropdown"
+            iosIcon={<Icon name="arrow-down" color={"#007aff"} />}
+            selectedValue={country}
+            placeholder="Select your country"
+            placeholderStyle={{ color: "#007aff" }}
+            placeholderIconColor="#007aff"
+            onValueChange={(e) => setCountry(e)}
+          >
+            {countries.map((c) => {
+              return <Picker.Item key={c.code} label={c.name} value={c.name} />;
+            })}
+          </Picker>
+        </Item>
+        <View style={{ width: "80%", alignItems: "center" }}>
+          <Button title="Confirm" onPress={() => checkout()} />
+        </View>
       </FormContainer>
-      <Item picker>
-        <Picker
-          note
-          mode="dropdown"
-          iosIcon={<Icon name="arrow-down" color={"#007aff"} />}
-          selectedValue={country}
-          placeholder="Select your country"
-          placeholderStyle={{ color: "#007aff" }}
-          placeholderIconColor="#007aff"
-          onValueChange={(e) => setCountry(e)}
-        >
-          {countries.map((c) => {
-            return <Picker.Item key={c.code} label={c.name} value={c.name} />;
-          })}
-        </Picker>
-      </Item>
-      <View style={{ width: "80%", alignItems: "center" }}>
-        <Button title="Confirm" onPress={() => checkout()} />
-      </View>
     </KeyboardAwareScrollView>
   );
 };
