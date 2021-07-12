@@ -8,6 +8,8 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.15.5",
+    "@react-native-community/async-storage": "^1.12.1",
     "@react-native-community/masked-view": "0.1.10",
     "@react-navigation/bottom-tabs": "^5.11.11",
     "@react-navigation/material-top-tabs": "^5.3.15",
@@ -17,6 +19,7 @@
     "deprecated-react-native-listview": "0.0.7",
     "expo": "~42.0.0",
     "expo-status-bar": "~1.0.4",
+    "jwt-decode": "^3.1.2",
     "native-base": "^2.13.0",
     "ngrok": "^4.0.1",
     "npm": "^7.19.1",
