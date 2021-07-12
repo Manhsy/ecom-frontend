@@ -1,7 +1,9 @@
-import axios from "axios";
+import Constants from "expo-constants";
+let baseURL = "";
 
-export default axios.create({
-  //baseURL = ngrok, remember to update it every eight hours
-  //to establish ngrok connection: ngrok http portNumberOfAPI
-  baseURL: "http://8d7ed9383861.ngrok.io/api/v1/",
-});
+if (Constants.manifest.extra.envir === "dev") {
+  baseURL = Constants.manifest.extra.devURL;
+} else {
+}
+
+export default baseURL;

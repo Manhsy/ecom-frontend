@@ -4,8 +4,9 @@ import FormContainer from "../../shared/form/formContainer";
 import Input from "../../shared/form/input";
 import Error from "../../shared/error";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import baseUrl from "../../API/baseUrl";
 import Toast from "react-native-toast-message";
+import baseURL from "../../API/baseUrl";
+import axios from "axios";
 
 const Register = (props) => {
   const [email, setEmail] = useState("");
@@ -25,9 +26,8 @@ const Register = (props) => {
         phone: phone,
         idAdmin: false,
       };
-
-      baseUrl
-        .post("users/register", user)
+      axios
+        .post(`${baseURL}/user/register`, user)
         .then((res) => {
           if (res.status == 200) {
             Toast.show({

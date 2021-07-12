@@ -3,15 +3,14 @@ import { View, Text, StyleSheet, ScrollView, Button } from "react-native";
 import { Container } from "native-base";
 import { useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import baseUrl from "../../API/baseUrl";
+import baseURL from "../../API/baseUrl";
+import axios from "axios";
 import AuthGlobal from "../../context/store/AuthGlobal";
 import { logoutUser } from "../../context/actions/authActions";
-import { set } from "react-native-reanimated";
 
 const UserProfile = (props) => {
   const context = useContext(AuthGlobal);
   const [userProfile, setUserProfile] = useState();
-  console.log(context.stateUser.isAuthenticated);
 
   useEffect(() => {
     async function fetchData() {
@@ -21,23 +20,20 @@ const UserProfile = (props) => {
       ) {
         props.navigation.navigate("Login");
       }
-
       const token = await AsyncStorage.getItem("jwt");
-
-      const response = await baseUrl.get(
-        `users/${context.stateUser.user.userId}`,
+      const response = await axios.get(
+        `${baseURL}/users/${context.stateUser.user.userId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-
       setUserProfile(response.data);
     }
     fetchData();
     return () => {
       setUserProfile();
     };
-  }, [context.stateUser.isAuthenticate]);
+  }, [context.stateUser.isAuthenticated]);
 
   return (
     <Container style={styles.container}>

@@ -13,6 +13,8 @@ import ProductList from "./ProductList";
 import SearchedProduct from "./SearchedProducts";
 import Banner from "../../shared/banner";
 import CategoryFilter from "./categoryFilter";
+import baseURL from "../../API/baseUrl";
+import axios from "axios";
 
 var { height } = Dimensions.get("window");
 
@@ -33,20 +35,22 @@ const ProductContainer = (props) => {
   //when the screen is focused, use call back will be called
   useFocusEffect(
     useCallback(() => {
+      axios
+        .get(`${baseURL}/products`)
+        .then((res) => {
+          setProducts(res.data);
+          setInitialState(res.data);
+          setProductFilter(res.data);
+          setProductCategory(res.data);
+          setLoading(false);
+        })
+        .catch((er) => console.log(er));
+
       setFocus(false);
       setActive(-1);
-      //products
-      baseUrl.get("products").then((res) => {
-        setProducts(res.data);
-        setInitialState(res.data);
-        setProductFilter(res.data);
-        setProductCategory(res.data);
-        setLoading(false);
-      });
 
-      //categories
-      baseUrl
-        .get("/api/v1/categories")
+      axios
+        .get(`${baseURL}/categories`)
         .then((res) => {
           setCategories(res.data);
         })
