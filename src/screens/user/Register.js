@@ -4,7 +4,7 @@ import FormContainer from "../../shared/form/formContainer";
 import Input from "../../shared/form/input";
 import Error from "../../shared/error";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import baseUrl from "../../../assets/common/baseUrl";
+import baseUrl from "../../API/baseUrl";
 import Toast from "react-native-toast-message";
 
 const Register = (props) => {
@@ -27,7 +27,7 @@ const Register = (props) => {
       };
 
       baseUrl
-        .post("/api/v1/users/register", user)
+        .post("users/register", user)
         .then((res) => {
           if (res.status == 200) {
             Toast.show({

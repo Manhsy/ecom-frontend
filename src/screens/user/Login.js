@@ -1,13 +1,24 @@
-import React, { userEffect, useState } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import { View, Text, StyleSheet, Button } from "react-native";
 import FormContainer from "../../shared/form/formContainer";
 import Input from "../../shared/form/input";
 import Error from "../../shared/error";
 
+//context
+import AuthGlobal from "../../context/store/AuthGlobal";
+import { loginUser } from "../../context/actions/authActions";
+
 const Login = (props) => {
+  const context = useContext(AuthGlobal);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  useEffect(() => {
+    if (context.stateUser.isAuthenticated === true) {
+      props.navigation.navigate("UserProfile");
+    }
+  }, [context.stateUser.isAuthenticated]);
+
   const handleSubmit = () => {
     const user = {
       email,
@@ -17,6 +28,7 @@ const Login = (props) => {
     if (email === "" || password === "") {
       setError("Please fill in your credentials");
     } else {
+      loginUser(user, context.dispatch);
     }
   };
   return (

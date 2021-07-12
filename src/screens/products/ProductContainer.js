@@ -7,7 +7,7 @@ import {
   Dimensions,
 } from "react-native";
 import { Container, Header, Icon, Item, Input, Text } from "native-base";
-import baseUrl from "../../../assets/common/baseUrl";
+import baseUrl from "../../API/baseUrl";
 import { useFocusEffect } from "@react-navigation/native";
 import ProductList from "./ProductList";
 import SearchedProduct from "./SearchedProducts";
@@ -36,7 +36,7 @@ const ProductContainer = (props) => {
       setFocus(false);
       setActive(-1);
       //products
-      baseUrl.get("/api/v1/products").then((res) => {
+      baseUrl.get("products").then((res) => {
         setProducts(res.data);
         setInitialState(res.data);
         setProductFilter(res.data);

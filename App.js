@@ -9,6 +9,9 @@ import Toast from "react-native-toast-message";
 import { Provider } from "react-redux";
 import store from "./src/redux/store";
 
+//context api
+import Auth from "./src/context/store/Auth";
+
 //navigators
 import Main from "./src/Navigators/Main";
 
@@ -16,12 +19,14 @@ LogBox.ignoreAllLogs(true);
 
 export default function App() {
   return (
-    <Provider store={store}>
-      <NavigationContainer>
-        <Header />
-        <Main />
-        <Toast ref={(ref) => Toast.setRef(ref)} />
-      </NavigationContainer>
-    </Provider>
+    <Auth>
+      <Provider store={store}>
+        <NavigationContainer>
+          <Header />
+          <Main />
+          <Toast ref={(ref) => Toast.setRef(ref)} />
+        </NavigationContainer>
+      </Provider>
+    </Auth>
   );
 }
