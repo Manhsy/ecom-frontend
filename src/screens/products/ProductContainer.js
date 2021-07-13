@@ -115,7 +115,7 @@ const ProductContainer = (props) => {
           {focus == true ? (
             <SearchedProduct
               navigation={props.navigation}
-              productFiltered={changeCategory}
+              productsFiltered={productFiltered}
             />
           ) : (
             <ScrollView>
