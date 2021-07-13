@@ -13,6 +13,7 @@ import {
 import baseURL from "../../API/baseUrl";
 import axios from "axios";
 import Icon from "react-native-vector-icons/FontAwesome";
+import EasyButton from "../../shared/StyledComponents/EasyButton";
 
 var { width } = Dimensions.get("window");
 
@@ -52,17 +53,19 @@ const ListItem = (props) => {
             >
               <Icon name="close" size={20} />
             </TouchableOpacity>
-            <Button
-              title="Edit"
-              onPress={() => {
-                props.navigation.navigate("ProductForm");
-                setModalVisibility(false);
-              }}
-            />
-            <Button
-              title="Delete"
-              //DELETE
-            />
+            <EasyButton
+              medium
+              secondary
+              onPress={() => [
+                props.navigation.navigate("ProductForm", { item: props }),
+                setModalVisibility(false),
+              ]}
+            >
+              <Text style={styles.textStyle}>Edit</Text>
+            </EasyButton>
+            <EasyButton medium danger>
+              <Text style={styles.textStyle}>Delete</Text>
+            </EasyButton>
           </View>
         </View>
       </Modal>
@@ -137,6 +140,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
   },
 });
 
