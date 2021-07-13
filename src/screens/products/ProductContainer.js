@@ -169,12 +169,12 @@ const styles = StyleSheet.create({
     backgroundColor: "gainsboro",
   },
   listContainer: {
-    height: height,
     flex: 1,
     flexDirection: "row",
     alignItems: "flex-start",
     flexWrap: "wrap",
     backgroundColor: "gainsboro",
+    bottom: 5,
   },
   center: {
     justifyContent: "center",
