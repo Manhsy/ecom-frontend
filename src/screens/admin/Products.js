@@ -11,13 +11,11 @@ import {
 import { Header, Item, Input } from "native-base";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useFocusEffect } from "@react-navigation/native";
-
 import baseURL from "../../API/baseUrl";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
 import ListItem from "./ListItem";
-
+import EasyButton from "../../shared/StyledComponents/EasyButton";
 var { height, width } = Dimensions.get("window");
 
 const ListHeader = () => {
@@ -82,8 +80,46 @@ const Products = (props) => {
     }
   };
 
+  const deleteProduct = (id) => {
+    axios
+      .delete(`${baseURL}/products/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => {
+        const products = productFilter.filter((item) => item.id != id);
+        setProductFilter(products);
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
-    <View>
+    <View style={styles.container}>
+      <View style={styles.buttonContainer}>
+        <EasyButton
+          secondary
+          medium
+          onPress={() => props.navigation.navigate("Orders")}
+        >
+          <Icon name="shopping-bag" size={18} color="white" />
+          <Text style={styles.buttonText}>Orders</Text>
+        </EasyButton>
+        <EasyButton
+          secondary
+          medium
+          onPress={() => props.navigation.navigate("ProductForm")}
+        >
+          <Icon name="plus" size={18} color="white" />
+          <Text style={styles.buttonText}>Products</Text>
+        </EasyButton>
+        <EasyButton
+          secondary
+          medium
+          onPress={() => props.navigation.navigate("Categories")}
+        >
+          <Icon name="plus" size={18} color="white" />
+          <Text style={styles.buttonText}>Categories</Text>
+        </EasyButton>
+      </View>
       <View>
         <Header searchBar rounded>
           <Item style={{ padding: 5 }}>
@@ -105,7 +141,12 @@ const Products = (props) => {
           data={productFilter}
           ListHeaderComponent={ListHeader}
           renderItem={({ item, index }) => (
-            <ListItem {...item} navigation={props.navigation} index={index} />
+            <ListItem
+              {...item}
+              delete={deleteProduct}
+              navigation={props.navigation}
+              index={index}
+            />
           )}
           keyExtractor={(item) => item.id}
         />
@@ -131,6 +172,19 @@ const styles = StyleSheet.create({
     height: height / 2,
     alignItems: "center",
     justifyContent: "center",
+  },
+  container: {
+    marginBottom: 160,
+    backgroundColor: "white",
+  },
+  buttonContainer: {
+    margin: 20,
+    alignSelf: "center",
+    flexDirection: "row",
+  },
+  buttonText: {
+    marginLeft: 4,
+    color: "white",
   },
 });
 export default Products;

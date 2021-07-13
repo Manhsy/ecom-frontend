@@ -12,10 +12,29 @@ import Toast from "react-native-toast-message";
 import { connect } from "react-redux";
 import * as actions from "../../redux/actions/cartActions";
 import EasyButton from "../../shared/StyledComponents/EasyButton";
+import TrafficLight from "../../shared/StyledComponents/TrafficLight";
 
 const SingleProduct = (props) => {
   const [item, setItem] = useState(props.route.params.item);
-  const [availability, setAvailability] = useState("");
+  const [availability, setAvailability] = useState(null);
+  const [availabilityText, setAvailabilityText] = useState("");
+
+  useEffect(() => {
+    if (props.route.params.item.countInStock == 0) {
+      setAvailability(<TrafficLight unavailable></TrafficLight>);
+      setAvailabilityText("Unavailable");
+    } else if (props.route.params.item.countInStock <= 5) {
+      setAvailability(<TrafficLight limited></TrafficLight>);
+      setAvailabilityText("Limited");
+    } else {
+      setAvailability(<TrafficLight available></TrafficLight>);
+      setAvailabilityText("Available");
+    }
+    return () => {
+      setAvailability(null);
+      setAvailabilityText("");
+    };
+  }, []);
 
   return (
     <Container style={styles.container}>
@@ -35,7 +54,15 @@ const SingleProduct = (props) => {
           <H1 style={styles.contentHeader}>{item.name}</H1>
           <Text style={styles.contentText}>{item.brand}</Text>
         </View>
-        {/*rich description and availability*/}
+        <View style={styles.availabilityContainer}>
+          <View style={styles.availability}>
+            <Text style={{ marginRight: 10 }}>
+              Availability: {availabilityText}
+            </Text>
+            {availability}
+          </View>
+          <Text style={{ alignItems: "center" }}>{item.description}</Text>
+        </View>
       </ScrollView>
       <View style={styles.bottomContainer}>
         <Left>
@@ -55,7 +82,7 @@ const SingleProduct = (props) => {
                 });
             }}
           >
-            <Text> style = {{ color: "white" }}Add</Text>
+            <Text style={{ color: "white" }}> Add</Text>
           </EasyButton>
         </Right>
       </View>
@@ -108,6 +135,14 @@ const styles = StyleSheet.create({
     fontSize: 24,
     margin: 20,
     color: "red",
+  },
+  availabilityContainer: {
+    marginBottom: 20,
+    alignItems: "center",
+  },
+  availability: {
+    flexDirection: "row",
+    marginBottom: 10,
   },
 });
 

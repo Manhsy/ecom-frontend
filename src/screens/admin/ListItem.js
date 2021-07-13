@@ -63,7 +63,14 @@ const ListItem = (props) => {
             >
               <Text style={styles.textStyle}>Edit</Text>
             </EasyButton>
-            <EasyButton medium danger>
+            <EasyButton
+              medium
+              danger
+              onPress={() => [
+                props.delete(props._id),
+                setModalVisibility(false),
+              ]}
+            >
               <Text style={styles.textStyle}>Delete</Text>
             </EasyButton>
           </View>
