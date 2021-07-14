@@ -12,12 +12,22 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 var { height, width } = Dimensions.get("window");
 
 const Confirm = (props) => {
+  const [token, setToken] = useState();
   const finalOrder = props.route.params;
 
   const confirmOrder = () => {
     const order = finalOrder.order.order;
+
+    AsyncStorage.getItem("jwt").then((res) => setToken(res));
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    console.log(order);
     axios
-      .post(`${baseURL}/orders`, order)
+      .post(`${baseURL}/orders`, order, config)
       .then((res) => {
         if (res.status == 200 || res.status == 201) {
           Toast.show({

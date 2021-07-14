@@ -7,33 +7,58 @@ import baseURL from "../../API/baseUrl";
 import axios from "axios";
 import AuthGlobal from "../../context/store/AuthGlobal";
 import { logoutUser } from "../../context/actions/authActions";
+import OrderCard from "../../shared/orderCards";
 
 const UserProfile = (props) => {
   const context = useContext(AuthGlobal);
   const [userProfile, setUserProfile] = useState();
+  const [orders, setOrders] = useState();
 
-  useEffect(() => {
-    async function fetchData() {
+  useFocusEffect(
+    useCallback(() => {
       if (
         context.stateUser.isAuthenticated === false ||
         context.stateUser.isAuthenticated === null
       ) {
         props.navigation.navigate("Login");
       }
-      const token = await AsyncStorage.getItem("jwt");
-      const response = await axios.get(
-        `${baseURL}/users/${context.stateUser.user.userId}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      setUserProfile(response.data);
-    }
-    fetchData();
-    return () => {
-      setUserProfile();
-    };
-  }, [context.stateUser.isAuthenticated]);
+
+      AsyncStorage.getItem("jwt")
+        .then((res) => {
+          axios
+            .get(`${baseURL}/users/${context.stateUser.user.userId}`, {
+              headers: { Authorization: `Bearer ${res}` },
+            })
+            .then((user) => {
+              setUserProfile(user.data);
+            });
+        })
+        .catch((error) => console.log(error));
+
+      AsyncStorage.getItem("jwt")
+        .then((res) => {
+          axios
+            .get(`${baseURL}/orders`, {
+              headers: { Authorization: `Bearer ${res}` },
+            })
+            .then((res) => {
+              setOrders(res.data);
+
+              const userOrders = orders.filter(
+                (order) => order.user._id === context.stateUser.user.userId
+              );
+              setOrders(userOrders);
+            })
+            .catch((err) => console.log(err));
+        })
+        .catch((error) => console.log(error));
+
+      return () => {
+        setUserProfile();
+        setOrders();
+      };
+    }, [context.stateUser.isAuthenticated])
+  );
 
   return (
     <Container style={styles.container}>
@@ -49,7 +74,7 @@ const UserProfile = (props) => {
             Phone: {userProfile ? userProfile.phone : ""}
           </Text>
         </View>
-        <View style={{ marginTop: 80 }}>
+        <View style={{ marginBottom: 10 }}>
           <Button
             title="Sign out"
             onPress={() => {
@@ -57,6 +82,20 @@ const UserProfile = (props) => {
               logoutUser(context.dispatch);
             }}
           />
+          <View style={styles.order}>
+            <Text style={{ fontSize: 20, alignSelf: "center" }}>My Orders</Text>
+            <View>
+              {orders ? (
+                orders.map((o) => {
+                  return <OrderCard key={o._id} {...o} screen="user" />;
+                })
+              ) : (
+                <View>
+                  <Text>You have no orders</Text>
+                </View>
+              )}
+            </View>
+          </View>
         </View>
       </ScrollView>
     </Container>
@@ -71,6 +110,11 @@ const styles = StyleSheet.create({
   subContainer: {
     alignItems: "center",
     marginTop: 60,
+  },
+  order: {
+    marginTop: 20,
+    alignItems: "center",
+    marginBottom: 10,
   },
 });
 
