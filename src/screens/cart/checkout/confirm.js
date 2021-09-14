@@ -14,6 +14,7 @@ var { height, width } = Dimensions.get("window");
 const Confirm = (props) => {
   const [token, setToken] = useState();
   const finalOrder = props.route.params;
+  console.log(props);
 
   const confirmOrder = () => {
     const order = finalOrder.order.order;
